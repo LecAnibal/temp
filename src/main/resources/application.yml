@@ -1,0 +1,389 @@
+spring.einfluss.ds:
+  driverClassName: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/mt?zeroDateTimeBehavior=convertToNull
+  username: root
+  password:
+  testOnBorrow: true
+  validationQuery: SELECT 1
+
+spring.stats.ds:
+  driverClassName: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/mt_ulama
+  username: mtulama
+  password: secreto
+
+mt5_stats_arbitro_torneo_jornada:
+  stat: mt5_stats_arbitro_torneo_jornada
+  setupQuery: DELETE FROM mt5_stats_arbitro_torneo_jornada where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT   id_torneo_jornada ,  id_arbitro,  id_torneo,  torneo,  id_liga,  id_fase,  jornada,  id_partido,  partido,  CONCAT( fecha ,' ',hora) as fecha,  estadio,  ta,  tr,  penal  FROM mt5_stats_arbitro_torneo_jornada where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_arbitro_torneo_jornada (id_torneo_jornada, id_arbitro, id_torneo, torneo, id_liga, id_fase, jornada, id_partido, partido, fecha, estadio, ta, tr, penal) VALUES(:id_torneo_jornada , :id_arbitro, :id_torneo, :torneo, :id_liga, :id_fase, :jornada, :id_partido, :partido, to_timestamp(:fecha, 'yyyy-mm-dd hh24:mi:ss'), :estadio, :ta, :tr, :penal)
+  queryParameters: id_torneo
+
+mt5_stats_arbitro_torneos:
+  stat: mt5_stats_arbitro_torneos
+  setupQuery: DELETE  FROM mt5_stats_arbitro_torneos where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT   id_arbitro_torneo,  id_arbitro,  arbitro,  url_arbitro,  id_torneo,  torneo,  id_liga,  id_fase,  ja,  ta,  tr,  prom_ta,  prom_tr,  penales,  gl,  e,  gv,  tot_gl,  tot_e,  tot_gv,  fecha_inicio  FROM mt5_stats_arbitro_torneos where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_arbitro_torneos (id_arbitro_torneo, id_arbitro, arbitro, url_arbitro, id_torneo, torneo, id_liga, id_fase, ja, ta, tr, prom_ta, prom_tr, penales, gl, e, gv, tot_gl, tot_e, tot_gv, fecha_inicio) VALUES(:id_arbitro_torneo, :id_arbitro, :arbitro, :url_arbitro, :id_torneo, :torneo, :id_liga, :id_fase, :ja, :ta, :tr, :prom_ta, :prom_tr, :penales, :gl, :e, :gv, :tot_gl, :tot_e, :tot_gv, to_timestamp(:fecha_inicio, 'yyyy-mm-dd hh24:mi:ss') )
+  queryParameters: id_torneo
+
+mt5_stats_autogoles:
+  stat: mt5_stats_autogoles
+  setupQuery: DELETE FROM mt5_stats_autogoles  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT   id_torneo,  posicion,  tipo_stats,  id_jugador,  mejor_conocido_jugador,  url_jugador,  federacion,  id_equipo,  mejor_conocido_equipo,  url_equipo,  jj,  gt,  pt,  st,  loc,  vis,  jn,  ca,  tl,  pe,  go  FROM mt5_stats_autogoles where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_autogoles (id_torneo, posicion, tipo_stats, id_jugador, mejor_conocido_jugador, url_jugador, federacion, id_equipo, mejor_conocido_equipo, url_equipo, jj, gt, pt, st, loc, vis, jn, ca, tl, pe, go) VALUES(:id_torneo, :posicion, :tipo_stats, :id_jugador, :mejor_conocido_jugador, :url_jugador, :federacion, :id_equipo, :mejor_conocido_equipo, :url_equipo, :jj, :gt, :pt, :st, :loc, :vis, :jn, :ca, :tl, :pe, :go)
+  queryParameters: id_torneo
+
+mt5_stats_dt_torneo_jornada:
+  stat: mt5_stats_dt_torneo_jornada
+  setupQuery: DELETE FROM  mt5_stats_dt_torneo_jornada where id_torneo =:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT   id_torneo_jornada,  id_dt,  id_torneo,  torneo,  id_liga,  id_fase,  jornada,  id_partido,  partido, CONCAT( fecha,' ', hora) as fecha, estadio,  jut,  minuto_exp,  g_p  FROM mt5_stats_dt_torneo_jornada where id_torneo =:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_dt_torneo_jornada (id_torneo_jornada, id_dt, id_torneo, torneo, id_liga, id_fase, jornada, id_partido, partido, fecha, estadio, jut, minuto_exp, g_p) VALUES(:id_torneo_jornada, :id_dt, :id_torneo, :torneo, :id_liga, :id_fase, :jornada, :id_partido, :partido, to_timestamp(:fecha, 'yyyy-mm-dd hh24:mi:ss'), :estadio, :jut, :minuto_exp, :g_p)
+  queryParameters: id_torneo
+
+mt5_stats_dt_torneos:
+  stat: mt5_stats_dt_torneos
+  setupQuery: DELETE FROM  mt5_stats_dt_torneos  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT   id_dt_torneo,  id_dt,  dt,  url_dt,  id_torneo,  torneo,  id_liga,  id_fase,  id_equipo,  equipo,  url_equipo,  jd,  jg,  je,  jp,  rend,  jut,  tot_jut,  fecha_inicio  FROM mt5_stats_dt_torneos where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_dt_torneos (id_dt_torneo, id_dt, dt, url_dt, id_torneo, torneo, id_liga, id_fase, id_equipo, equipo, url_equipo, jd, jg, je, jp, rend, jut, tot_jut, fecha_inicio) VALUES(:id_dt_torneo, :id_dt, :dt, :url_dt, :id_torneo, :torneo, :id_liga, :id_fase, :id_equipo, :equipo, :url_equipo, :jd, :jg, :je, :jp, :rend, :jut, :tot_jut, to_timestamp(:fecha_inicio, 'yyyy-mm-dd hh24:mi:ss'))
+  queryParameters: id_torneo
+
+mt5_stats_goleoindividual:
+  stat: mt5_stats_goleoindividual
+  setupQuery: DELETE FROM mt5_stats_goleoindividual  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT id_torneo,posicion,tipo_stats,id_jugador,mejor_conocido_jugador,url_jugador,federacion,id_equipo,mejor_conocido_equipo,url_equipo,jj,gt,pt,st,loc,vis,jn,ca,tl,pe,go FROM mt5_stats_goleoindividual  where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_goleoindividual (id_torneo, posicion, tipo_stats, id_jugador, mejor_conocido_jugador, url_jugador, federacion, id_equipo, mejor_conocido_equipo, url_equipo, jj, gt, pt, st, loc, vis, jn, ca, tl, pe, go) VALUES(:id_torneo, :posicion, :tipo_stats, :id_jugador, :mejor_conocido_jugador, :url_jugador, :federacion, :id_equipo, :mejor_conocido_equipo, :url_equipo, :jj, :gt, :pt, :st, :loc, :vis, :jn, :ca, :tl, :pe, :go)
+  queryParameters: id_torneo
+
+mt5_stats_pasesgol:
+  stat: mt5_stats_pasesgol
+  setupQuery: Delete from mt5_stats_pasesgol  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  id_torneo,posicion,tipo_stats,id_jugador,mejor_conocido_jugador,url_jugador,federacion,id_equipo,mejor_conocido_equipo,url_equipo,jj,ptg,pt,st,loc,vis FROM mt5_stats_pasesgol where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_pasesgol (id_torneo, posicion, tipo_stats, id_jugador, mejor_conocido_jugador, url_jugador, federacion, id_equipo, mejor_conocido_equipo, url_equipo, jj, ptg, pt, st, loc, vis) VALUES( :id_torneo, :posicion, :tipo_stats, :id_jugador, :mejor_conocido_jugador, :url_jugador, :federacion, :id_equipo, :mejor_conocido_equipo, :url_equipo, :jj, :ptg, :pt, :st, :loc, :vis)
+  queryParameters: id_torneo
+
+mt5_stats_penales_anotados:
+  stat: mt5_stats_penales_anotados
+  setupQuery: DELETE FROM mt5_stats_penales_anotados  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,tipo_stats,id_equipo,id_jugador,federacion,equipo,url_equipo,nombre_jugador,url_jugador,PT,JJ,PPT,PST,LOC,VIS FROM mt5_stats_penales_anotados where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_penales_anotados (posicion, id_torneo, tipo_stats, id_equipo, id_jugador, federacion, equipo, url_equipo, nombre_jugador, url_jugador, pt, jj, ppt, pst, loc, vis) VALUES(:posicion, :id_torneo, :tipo_stats, :id_equipo, :id_jugador, :federacion, :equipo, :url_equipo, :nombre_jugador, :url_jugador, :PT, :JJ, :PPT, :PST, :LOC, :VIS)
+  queryParameters: id_torneo
+
+mt5_stats_penales_fallados:
+  stat: mt5_stats_penales_fallados
+  setupQuery: DELETE FROM mt5_stats_penales_fallados  where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,tipo_stats,id_equipo,id_jugador,federacion,equipo,url_equipo,nombre_jugador,url_jugador,PT,JJ,PPT,PST,FJ,AP,LOC,VIS FROM mt5_stats_penales_fallados where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_penales_fallados (posicion, id_torneo, tipo_stats, id_equipo, id_jugador, federacion, equipo, url_equipo, nombre_jugador, url_jugador, pt, jj, ppt, pst, fj, ap, loc, vis) VALUES(:posicion, :id_torneo, :tipo_stats, :id_equipo, :id_jugador, :federacion, :equipo, :url_equipo, :nombre_jugador, :url_jugador, :PT, :JJ, :PPT, :PST, :FJ, :AP, :LOC, :VIS)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_defensivas:
+  stat: mt5_stats_tabla_defensivas
+  setupQuery: DELETE FROM mt5_stats_tabla_defensivas where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,tipo_stats,id_equipo,federacion,equipo,url_equipo,JJ,GT,PT,ST,LOC,VIS,JN,CA,TL,PE,GO,AG FROM mt5_stats_tabla_defensivas where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_defensivas (posicion, id_torneo, tipo_stats, id_equipo, federacion, equipo, url_equipo, jj, gt, pt, st, loc, vis, jn, ca, tl, pe, go, ag) VALUES( :posicion, :id_torneo, :tipo_stats, :id_equipo, :federacion, :equipo, :url_equipo, :JJ, :GT, :PT, :ST, :LOC, :VIS, :JN, :CA, :TL, :PE, :GO, :AG)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_general:
+  stat: mt5_stats_tabla_general
+  setupQuery: Delete from  mt5_stats_tabla_general WHERE  id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,id_fase,jornada,id_equipo,federacion,equipo,url_equipo,grupo,jj,jg,je,jp,gf,gc,dif,pts,racha_ganados,racha_sin_perder,racha_perdidos,racha_sin_ganar,dif_ranking FROM mt5_stats_tabla_general where  id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_general (posicion, id_torneo, id_fase, jornada, id_equipo, federacion, equipo, url_equipo, grupo, jj, jg, je, jp, gf, gc, dif, pts, racha_ganados, racha_sin_perder, racha_perdidos, racha_sin_ganar, dif_ranking) VALUES(:posicion, :id_torneo, :id_fase, :jornada, :id_equipo, :federacion, :equipo, :url_equipo, :grupo, :jj, :jg, :je, :jp, :gf, :gc, :dif, :pts, :racha_ganados, :racha_sin_perder, :racha_perdidos, :racha_sin_ganar, :dif_ranking)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_general_locales:
+  stat: mt5_stats_tabla_general_locales
+  setupQuery:  DELETE FROM mt5_stats_tabla_general_locales WHERE  id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT posicion,id_torneo,id_fase,jornada,id_equipo,federacion,equipo,url_equipo,grupo,jj,jg,je,jp,gf,gc,dif,pts,racha_ganados,racha_sin_perder,racha_perdidos,racha_sin_ganar,dif_ranking FROM mt5_stats_tabla_general_locales where  id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_general_locales (posicion, id_torneo, id_fase, jornada, id_equipo, federacion, equipo, url_equipo, grupo, jj, jg, je, jp, gf, gc, dif, pts, racha_ganados, racha_sin_perder, racha_perdidos, racha_sin_ganar, dif_ranking) VALUES(:posicion,:id_torneo,:id_fase,:jornada,:id_equipo,:federacion,:equipo,:url_equipo,:grupo,:jj,:jg,:je,:jp,:gf,:gc,:dif,:pts,:racha_ganados,:racha_sin_perder,:racha_perdidos,:racha_sin_ganar,:dif_ranking)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_general_visitantes:
+  stat: mt5_stats_tabla_general_visitantes
+  setupQuery: DELETE FROM  mt5_stats_tabla_general_visitantes WHERE   id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery:  SELECT posicion,id_torneo,id_fase,jornada,id_equipo,federacion,equipo,url_equipo,grupo,jj,jg,je,jp,gf,gc,dif,pts,racha_ganados,racha_sin_perder,racha_perdidos,racha_sin_ganar,dif_ranking FROM mt5_stats_tabla_general_visitantes where  id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_general_visitantes (posicion, id_torneo, id_fase, jornada, id_equipo, federacion, equipo, url_equipo, grupo, jj, jg, je, jp, gf, gc, dif, pts, racha_ganados, racha_sin_perder, racha_perdidos, racha_sin_ganar, dif_ranking) VALUES(:posicion,:id_torneo,:id_fase,:jornada,:id_equipo,:federacion,:equipo,:url_equipo,:grupo,:jj,:jg,:je,:jp,:gf,:gc,:dif,:pts,:racha_ganados,:racha_sin_perder,:racha_perdidos,:racha_sin_ganar,:dif_ranking)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_ofensivas:
+  stat: mt5_stats_tabla_ofensivas
+  setupQuery: DELETE from  mt5_stats_tabla_ofensivas where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,tipo_stats,id_equipo,federacion,equipo,url_equipo,JJ,GT,PT,ST,LOC,VIS,JN,CA,TL,PE,GO,AG FROM mt5_stats_tabla_ofensivas where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_ofensivas (posicion, id_torneo, tipo_stats, id_equipo, federacion, equipo, url_equipo, jj, gt, pt, st, loc, vis, jn, ca, tl, pe, go, ag) VALUES( :posicion,:id_torneo,:tipo_stats,:id_equipo,:federacion,:equipo,:url_equipo,:JJ,:GT,:PT,:ST,:LOC,:VIS,:JN,:CA,:TL,:PE,:GO,:AG)
+  queryParameters: id_torneo
+
+mt5_stats_tabla_porcentajes:
+  stat: mt5_stats_tabla_porcentajes
+  setupQuery: DELETE FROM mt5_stats_tabla_porcentajes where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,jornada,federacion,id_equipo,equipo,url_equipo,grupo,jj,pts,porcentaje FROM mt5_stats_tabla_porcentajes where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tabla_porcentajes (posicion, id_torneo, jornada, federacion, id_equipo, equipo, url_equipo, grupo, jj, pts, porcentaje) VALUES(:posicion,:id_torneo,:jornada,:federacion,:id_equipo,:equipo,:url_equipo,:grupo,:jj,:pts,:porcentaje)
+  queryParameters: id_torneo
+
+mt5_stats_tarjetas_amarillas:
+  stat: mt5_stats_tarjetas_amarillas
+  setupQuery: DELETE FROM mt5_stats_tarjetas_amarillas  where  id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT posicion,id_torneo,tipo_stats,id_equipo,id_jugador,federacion,equipo,url_equipo,nombre_jugador,url_jugador,JJ,TA,PT,ST FROM mt5_stats_tarjetas_amarillas where  id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tarjetas_amarillas (posicion, id_torneo, tipo_stats, id_equipo, id_jugador, federacion, equipo, url_equipo, nombre_jugador, url_jugador, jj, ta, pt, st) VALUES(:posicion,:id_torneo,:tipo_stats,:id_equipo,:id_jugador,:federacion,:equipo,:url_equipo,:nombre_jugador,:url_jugador,:JJ,:TA,:PT,:ST)
+  queryParameters: id_torneo
+
+mt5_stats_tarjetas_rojas:
+  stat: mt5_stats_tarjetas_rojas
+  setupQuery: DELETE FROM mt5_stats_tarjetas_rojas  where id_torneo =:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  posicion,id_torneo,tipo_stats,id_equipo,id_jugador,federacion,equipo,url_equipo,nombre_jugador,url_jugador,JJ,TR,TRA,TRD,PT,ST FROM mt5_stats_tarjetas_rojas where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_tarjetas_rojas (posicion, id_torneo, tipo_stats, id_equipo, id_jugador, federacion, equipo, url_equipo, nombre_jugador, url_jugador, jj, tr, tra, trd, pt, st) VALUES(:posicion,:id_torneo,:tipo_stats,:id_equipo,:id_jugador,:federacion,:equipo,:url_equipo,:nombre_jugador,:url_jugador,:JJ,:TR,:TRA,:TRD,:PT,:ST)
+  queryParameters: id_torneo
+
+mt5_stats_ulama_player_defensive:
+  stat: mt5_stats_ulama_player_defensive
+  setupQuery: DELETE FROM mt5_stats_ulama_player_defensive where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,outfielder_block,anticipations,possession_won,poss_won_def_3rd,poss_won_mid_3rd,poss_won_att_3rd,interception,offside_provoked FROM mt5_stats_ulama_player_defensive where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_defensive (competition_id, season_id, team_id, player_id, outfielder_block, anticipations, possession_won, poss_won_def_3rd, poss_won_mid_3rd, poss_won_att_3rd, interception, offside_provoked) VALUES(:competition_id,:season_id,:team_id,:player_id,:outfielder_block,:anticipations,:possession_won,:poss_won_def_3rd,:poss_won_mid_3rd,:poss_won_att_3rd,:interception,:offside_provoked)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_discipline:
+  stat: mt5_stats_ulama_player_discipline
+  setupQuery: DELETE from  mt5_stats_ulama_player_discipline where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,yellow_cards,total_yel_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,was_fouled,fouled_final_third FROM mt5_stats_ulama_player_discipline where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_discipline (competition_id, season_id, team_id, player_id, yellow_cards, total_yel_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, was_fouled, fouled_final_third) VALUES(:competition_id,:season_id,:team_id,:player_id,:yellow_cards,:total_yel_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:was_fouled,:fouled_final_third)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_goalkeepers:
+  stat: mt5_stats_ulama_player_goalkeepers
+  setupQuery: DELETE FROM  mt5_stats_ulama_player_goalkeepers  where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots_recieved,saves,effectiveness,total_goals_recieved,goals_conceded_ibox,goals_conceded_obox,punches,clean_sheet FROM mt5_stats_ulama_player_goalkeepers where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_goalkeepers (competition_id, season_id, team_id, player_id, total_shots_recieved, saves, effectiveness, total_goals_recieved, goals_conceded_ibox, goals_conceded_obox, punches, clean_sheet) VALUES( :competition_id,:season_id,:team_id,:player_id,:total_shots_recieved,:saves,:effectiveness,:total_goals_recieved,:goals_conceded_ibox,:goals_conceded_obox,:punches,:clean_sheet)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_ofensive:
+  stat: mt5_stats_ulama_player_ofensive
+  setupQuery: DELETE FROM mt5_stats_ulama_player_ofensive  where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots,ontarget_scoring_att,total_goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_player_ofensive where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_ofensive (competition_id, season_id, team_id, player_id, total_shots, ontarget_scoring_att, total_goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES(:competition_id,:season_id,:team_id,:player_id,:total_shots,:ontarget_scoring_att,:total_goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_passes:
+  stat: mt5_stats_ulama_player_passes
+  setupQuery: DELETE FROM  mt5_stats_ulama_player_passes where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,successful_passes,missed_passes,total_passes,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,perc_correct_centers FROM mt5_stats_ulama_player_passes where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_passes (competition_id, season_id, team_id, player_id, successful_passes, missed_passes, total_passes, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, perc_correct_centers) VALUES(:competition_id,:season_id,:team_id,:player_id,:successful_passes,:missed_passes,:total_passes,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:perc_correct_centers)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_team_defensive:
+  stat: mt5_stats_ulama_team_defensive
+  setupQuery: DELETE FROM mt5_stats_ulama_team_defensive where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT competition_id,season_id,team_id,total_shots_allowed,ontarget_scoring_att_rival,goals_conceded,locks,outfielder_block,blocked_cross,blocked_pass,interception FROM mt5_stats_ulama_team_defensive where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_defensive (competition_id, season_id, team_id, total_shots_allowed, ontarget_scoring_att_rival, goals_conceded, locks, outfielder_block, blocked_cross, blocked_pass, interception) VALUES(:competition_id,:season_id,:team_id,:total_shots_allowed,:ontarget_scoring_att_rival,:goals_conceded,:locks,:outfielder_block,:blocked_cross,:blocked_pass,:interception )
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_team_discipline:
+  stat: mt5_stats_ulama_team_discipline
+  setupQuery:  DELETE FROM mt5_stats_ulama_team_discipline  where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_yellow_cards,first_yellow_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,fouls_recieved,fair_play_points FROM mt5_stats_ulama_team_discipline where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_discipline (competition_id, season_id, team_id, total_yellow_cards, first_yellow_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, fouls_recieved, fair_play_points) VALUES(:competition_id,:season_id,:team_id,:total_yellow_cards,:first_yellow_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:fouls_recieved,:fair_play_points)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_team_ofensive:
+  stat: mt5_stats_ulama_team_ofensive
+  setupQuery:  DELETE FROM  mt5_stats_ulama_team_ofensive where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_shots,ontarget_scoring_att,goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_team_ofensive where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_ofensive (competition_id, season_id, team_id, total_shots, ontarget_scoring_att, goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES( :competition_id,:season_id,:team_id,:total_shots,:ontarget_scoring_att,:goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_team_passes:
+  stat: mt5_stats_ulama_team_passes
+  setupQuery: DELETE FROM  mt5_stats_ulama_team_passes where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,correct_pass,incorrect_pass,total_pass,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,percentage_correct_centers FROM mt5_stats_ulama_team_passes where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_passes (competition_id, season_id, team_id, correct_pass, incorrect_pass, total_pass, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, percentage_correct_centers) VALUES(:competition_id,:season_id,:team_id,:correct_pass,:incorrect_pass,:total_pass,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:percentage_correct_centers)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_team_quotient:
+  stat: mt5_stats_ulama_team_quotient
+  setupQuery: DELETE FROM mt5_stats_ulama_team_quotient
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,played,points,relegationaverage,points_t1,points_t2,points_t3,points_t4,points_t5,points_t6,games_played_t1,games_played_t2,games_played_t3,games_played_t4,games_played_t5,games_played_t6,goals_scored_t1,goals_scored_t2,goals_scored_t3,goals_scored_t4,goals_scored_t5,goals_scored_t6,goals_against_t1,goals_against_t2,goals_against_t3,goals_against_t4,goals_against_t5,goals_against_t6,dif_6_seasons,dif_4_seasons,dif_2_seasons FROM mt5_stats_ulama_team_quotient
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_quotient (competition_id, season_id, team_id, played, points, relegationaverage, points_t1, points_t2, points_t3, points_t4, points_t5, points_t6, games_played_t1, games_played_t2, games_played_t3, games_played_t4, games_played_t5, games_played_t6, goals_scored_t1, goals_scored_t2, goals_scored_t3, goals_scored_t4, goals_scored_t5, goals_scored_t6, goals_against_t1, goals_against_t2, goals_against_t3, goals_against_t4, goals_against_t5, goals_against_t6, dif_6_seasons, dif_4_seasons, dif_2_seasons) VALUES(:competition_id,:season_id,:team_id,:played,:points,:relegationaverage,:points_t1,:points_t2,:points_t3,:points_t4,:points_t5,:points_t6,:games_played_t1,:games_played_t2,:games_played_t3,:games_played_t4,:games_played_t5,:games_played_t6,:goals_scored_t1,:goals_scored_t2,:goals_scored_t3,:goals_scored_t4,:goals_scored_t5,:goals_scored_t6,:goals_against_t1,:goals_against_t2,:goals_against_t3,:goals_against_t4,:goals_against_t5,:goals_against_t6,:dif_6_seasons,:dif_4_seasons,:dif_2_seasons)
+  queryParameters:
+
+mt5_stats_jugador:
+  stat: mt5_stats_jugador
+  setupQuery: DELETE FROM mt5_stats_jugador where id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  id_liga,tipo_stats,id_jugador,jugador,url_jugador,id_torneo,torneo,url_torneo,fecha,id_equipo,equipo,url_equipo,posicion,camiseta,jj,tit,jc,ec,sc,min,gol,ppg,golr,ta,tda,tr FROM mt5_stats_jugador where id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_jugador (id_liga, tipo_stats, id_jugador, jugador, url_jugador, id_torneo, torneo, url_torneo, fecha, id_equipo, equipo, url_equipo, posicion, camiseta, jj, tit, jc, ec, sc, min, gol, ppg, golr, ta, tda, tr) VALUES(:id_liga, :tipo_stats, :id_jugador, :jugador, :url_jugador, :id_torneo, :torneo, :url_torneo, to_timestamp(:fecha, 'yyyy-mm-dd hh24:mi:ss'), :id_equipo, :equipo, :url_equipo, :posicion, :camiseta, :jj, :tit, :jc, :ec, :sc, :min, :gol, :ppg, :golr, :ta, :tda, :tr)
+  queryParameters: id_torneo
+
+mt5_stats_jugador_jornada:
+  stat: mt5_stats_jugador_jornada
+  setupQuery: DELETE FROM mt5_stats_jugador_jornada WHERE id_torneo=:id_torneo
+  cleanupQuery:
+  sourceQuery: SELECT  id_jugador,jugador,url_jugador,id_equipo,equipo,url_equipo,posicion,camiseta,id_torneo,torneo,id_fase,fase,jornada,id_partido,partido,url_partido,fecha,jugo,tit,ec,sc,min,gol,ppg,golr,ta,tda,tr FROM mt5_stats_jugador_jornada where  id_torneo=:id_torneo
+  destinationQuery: INSERT INTO mt5_stats_jugador_jornada (id_jugador, jugador, url_jugador, id_equipo, equipo, url_equipo, posicion, camiseta, id_torneo, torneo, id_fase, fase, jornada, id_partido, partido, url_partido, fecha, jugo, tit, ec, sc, min, gol, ppg, golr, ta, tda, tr) VALUES( :id_jugador, :jugador, :url_jugador, :id_equipo, :equipo, :url_equipo, :posicion, :camiseta, :id_torneo, :torneo, :id_fase, :fase, :jornada, :id_partido, :partido, :url_partido, to_timestamp(:fecha, 'yyyy-mm-dd hh24:mi:ss'), :jugo, :tit, :ec, :sc, :min, :gol, :ppg, :golr, :ta, :tda, :tr)
+  queryParameters: id_torneo
+
+mt5_stats_ulama_team_defensive_home:
+  stat: mt5_stats_ulama_team_defensive_home
+  setupQuery: DELETE FROM mt5_stats_ulama_team_defensive_home
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_shots_allowed,ontarget_scoring_att_rival,goals_conceded,locks,outfielder_block,blocked_cross,blocked_pass,interception FROM  mt5_stats_ulama_team_defensive_home
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_defensive_home (competition_id, season_id, team_id, total_shots_allowed, ontarget_scoring_att_rival, goals_conceded, locks, outfielder_block, blocked_cross, blocked_pass, interception) VALUES(:competition_id,:season_id,  :team_id,:total_shots_allowed,:ontarget_scoring_att_rival,:goals_conceded,:locks,:outfielder_block,:blocked_cross,:blocked_pass,:interception)
+  queryParameters:
+
+mt5_stats_ulama_team_ofensive_home:
+  stat: mt5_stats_ulama_team_ofensive_home
+  setupQuery: DELETE FROM mt5_stats_ulama_team_ofensive_home
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_shots,ontarget_scoring_att,goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_team_ofensive_home
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_ofensive_home (competition_id, season_id, team_id, total_shots, ontarget_scoring_att, goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES(:competition_id,:season_id, :team_id ,:total_shots,:ontarget_scoring_att,:goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters:
+
+mt5_stats_ulama_team_passes_home:
+  stat: mt5_stats_ulama_team_passes_home
+  setupQuery: DELETE FROM mt5_stats_ulama_team_passes_home
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,correct_pass,incorrect_pass,total_pass,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,percentage_correct_centers FROM mt5_stats_ulama_team_passes_home
+  destinationQuery:  INSERT INTO mt5_stats_ulama_team_passes_home (competition_id, season_id, team_id, correct_pass, incorrect_pass, total_pass, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, percentage_correct_centers) VALUES(:competition_id,:season_id, :team_id,:correct_pass,:incorrect_pass,:total_pass,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:percentage_correct_centers)
+  queryParameters:
+
+mt5_stats_ulama_team_discipline_home:
+  stat: mt5_stats_ulama_team_discipline_home
+  setupQuery: DELETE  FROM mt5_stats_ulama_team_discipline_home
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_yellow_cards,first_yellow_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,fouls_recieved,fair_play_points FROM mt5_stats_ulama_team_discipline_home
+  destinationQuery:   INSERT INTO mt5_stats_ulama_team_discipline_home (competition_id, season_id, team_id, total_yellow_cards, first_yellow_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, fouls_recieved, fair_play_points) VALUES(:competition_id,:season_id, :team_id ,:total_yellow_cards,:first_yellow_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:fouls_recieved,:fair_play_points)
+  queryParameters:
+
+mt5_stats_ulama_team_defensive_away:
+  stat: mt5_stats_ulama_team_defensive_away
+  setupQuery: DELETE FROM  mt5_stats_ulama_team_defensive_away
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_shots_allowed,ontarget_scoring_att_rival,goals_conceded,locks,outfielder_block,blocked_cross,blocked_pass,interception FROM  mt5_stats_ulama_team_defensive_away
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_defensive_away (competition_id, season_id, team_id, total_shots_allowed, ontarget_scoring_att_rival, goals_conceded, locks, outfielder_block, blocked_cross, blocked_pass, interception) VALUES(:competition_id,:season_id,  :team_id,:total_shots_allowed,:ontarget_scoring_att_rival,:goals_conceded,:locks,:outfielder_block,:blocked_cross,:blocked_pass,:interception)
+  queryParameters:
+
+mt5_stats_ulama_team_ofensive_away:
+  stat: mt5_stats_ulama_team_ofensive_away
+  setupQuery: DELETE FROM mt5_stats_ulama_team_ofensive_away
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_shots,ontarget_scoring_att,goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_team_ofensive_away
+  destinationQuery: INSERT INTO mt5_stats_ulama_team_ofensive_away (competition_id, season_id, team_id, total_shots, ontarget_scoring_att, goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES(:competition_id,:season_id, :team_id ,:total_shots,:ontarget_scoring_att,:goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters:
+
+mt5_stats_ulama_team_passes_away:
+  stat: mt5_stats_ulama_team_passes_away
+  setupQuery: DELETE FROM mt5_stats_ulama_team_passes_away
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,correct_pass,incorrect_pass,total_pass,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,percentage_correct_centers FROM mt5_stats_ulama_team_passes_away
+  destinationQuery:  INSERT INTO mt5_stats_ulama_team_passes_away (competition_id, season_id, team_id, correct_pass, incorrect_pass, total_pass, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, percentage_correct_centers) VALUES(:competition_id,:season_id, :team_id,:correct_pass,:incorrect_pass,:total_pass,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:percentage_correct_centers)
+  queryParameters:
+
+mt5_stats_ulama_team_discipline_away:
+  stat: mt5_stats_ulama_team_discipline_away
+  setupQuery: DELETE FROM mt5_stats_ulama_team_discipline_away
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,total_yellow_cards,first_yellow_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,fouls_recieved,fair_play_points FROM mt5_stats_ulama_team_discipline_away
+  destinationQuery:   INSERT INTO mt5_stats_ulama_team_discipline_away (competition_id, season_id, team_id, total_yellow_cards, first_yellow_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, fouls_recieved, fair_play_points) VALUES(:competition_id,:season_id, :team_id ,:total_yellow_cards,:first_yellow_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:fouls_recieved,:fair_play_points)
+  queryParameters:
+
+mt5_stats_ulama_player_defensive_home:
+  stat: mt5_stats_ulama_player_defensive_home
+  setupQuery: DELETE  FROM mt5_stats_ulama_player_defensive_home where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,outfielder_block,anticipations,possession_won,poss_won_def_3rd,poss_won_mid_3rd,poss_won_att_3rd,interception,offside_provoked FROM mt5_stats_ulama_player_defensive_home where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_defensive_home (competition_id, season_id, team_id, player_id, outfielder_block, anticipations, possession_won, poss_won_def_3rd, poss_won_mid_3rd, poss_won_att_3rd, interception, offside_provoked) VALUES(:competition_id,:season_id,:team_id,:player_id,:outfielder_block,:anticipations,:possession_won,:poss_won_def_3rd,:poss_won_mid_3rd,:poss_won_att_3rd,:interception,:offside_provoked)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_discipline_home:
+  stat: mt5_stats_ulama_player_discipline_home
+  setupQuery: DELETE from mt5_stats_ulama_player_discipline_home where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,yellow_cards,total_yel_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,was_fouled,fouled_final_third FROM mt5_stats_ulama_player_discipline_home where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_discipline_home (competition_id, season_id, team_id, player_id, yellow_cards, total_yel_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, was_fouled, fouled_final_third) VALUES(:competition_id,:season_id,:team_id,:player_id,:yellow_cards,:total_yel_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:was_fouled,:fouled_final_third)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_goalkeepers_home:
+  stat: mt5_stats_ulama_player_goalkeepers_home
+  setupQuery: DELETE FROM mt5_stats_ulama_player_goalkeepers_home where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots_recieved,saves,effectiveness,total_goals_recieved,goals_conceded_ibox,goals_conceded_obox,punches,clean_sheet FROM mt5_stats_ulama_player_goalkeepers_home where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_goalkeepers_home (competition_id, season_id, team_id, player_id, total_shots_recieved, saves, effectiveness, total_goals_recieved, goals_conceded_ibox, goals_conceded_obox, punches, clean_sheet) VALUES( :competition_id,:season_id,:team_id,:player_id,:total_shots_recieved,:saves,:effectiveness,:total_goals_recieved,:goals_conceded_ibox,:goals_conceded_obox,:punches,:clean_sheet)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_ofensive_home:
+  stat: mt5_stats_ulama_player_ofensive_home
+  setupQuery: DELETE FROM mt5_stats_ulama_player_ofensive_home where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots,ontarget_scoring_att,total_goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_player_ofensive_home where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_ofensive_home (competition_id, season_id, team_id, player_id, total_shots, ontarget_scoring_att, total_goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES(:competition_id,:season_id,:team_id,:player_id,:total_shots,:ontarget_scoring_att,:total_goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_passes_home:
+  stat: mt5_stats_ulama_player_passes_home
+  setupQuery: DELETE  FROM mt5_stats_ulama_player_passes_home where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,successful_passes,missed_passes,total_passes,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,perc_correct_centers FROM mt5_stats_ulama_player_passes_home where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_passes_home (competition_id, season_id, team_id, player_id, successful_passes, missed_passes, total_passes, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, perc_correct_centers) VALUES(:competition_id,:season_id,:team_id,:player_id,:successful_passes,:missed_passes,:total_passes,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:perc_correct_centers)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_defensive_away:
+  stat: mt5_stats_ulama_player_defensive_away
+  setupQuery: DELETE FROM mt5_stats_ulama_player_defensive_away where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,outfielder_block,anticipations,possession_won,poss_won_def_3rd,poss_won_mid_3rd,poss_won_att_3rd,interception,offside_provoked FROM mt5_stats_ulama_player_defensive_away where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_defensive_away (competition_id, season_id, team_id, player_id, outfielder_block, anticipations, possession_won, poss_won_def_3rd, poss_won_mid_3rd, poss_won_att_3rd, interception, offside_provoked) VALUES(:competition_id,:season_id,:team_id,:player_id,:outfielder_block,:anticipations,:possession_won,:poss_won_def_3rd,:poss_won_mid_3rd,:poss_won_att_3rd,:interception,:offside_provoked)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_discipline_away:
+  stat: mt5_stats_ulama_player_discipline_away
+  setupQuery: DELETE  FROM mt5_stats_ulama_player_discipline_away where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,yellow_cards,total_yel_card,second_yellow,total_red_card,fk_foul_lost,penalty_conceded,was_fouled,fouled_final_third FROM mt5_stats_ulama_player_discipline_away where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_discipline_away (competition_id, season_id, team_id, player_id, yellow_cards, total_yel_card, second_yellow, total_red_card, fk_foul_lost, penalty_conceded, was_fouled, fouled_final_third) VALUES(:competition_id,:season_id,:team_id,:player_id,:yellow_cards,:total_yel_card,:second_yellow,:total_red_card,:fk_foul_lost,:penalty_conceded,:was_fouled,:fouled_final_third)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_goalkeepers_away:
+  stat: mt5_stats_ulama_player_goalkeepers_away
+  setupQuery: DELETE FROM mt5_stats_ulama_player_goalkeepers_away where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots_recieved,saves,effectiveness,total_goals_recieved,goals_conceded_ibox,goals_conceded_obox,punches,clean_sheet FROM mt5_stats_ulama_player_goalkeepers_away where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_goalkeepers_away (competition_id, season_id, team_id, player_id, total_shots_recieved, saves, effectiveness, total_goals_recieved, goals_conceded_ibox, goals_conceded_obox, punches, clean_sheet) VALUES( :competition_id,:season_id,:team_id,:player_id,:total_shots_recieved,:saves,:effectiveness,:total_goals_recieved,:goals_conceded_ibox,:goals_conceded_obox,:punches,:clean_sheet)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_ofensive_away:
+  stat: mt5_stats_ulama_player_ofensive_away
+  setupQuery: DELETE FROM mt5_stats_ulama_player_ofensive_away where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,total_shots,ontarget_scoring_att,total_goals,percentage,goal_every,final_third_entries,pen_area_entries,total_offside FROM mt5_stats_ulama_player_ofensive_away where competition_id=:competition_id and season_id=:season_id
+  destinationQuery:  INSERT INTO mt5_stats_ulama_player_ofensive_away (competition_id, season_id, team_id, player_id, total_shots, ontarget_scoring_att, total_goals, percentage, goal_every, final_third_entries, pen_area_entries, total_offside) VALUES(:competition_id,:season_id,:team_id,:player_id,:total_shots,:ontarget_scoring_att,:total_goals,:percentage,:goal_every,:final_third_entries,:pen_area_entries,:total_offside)
+  queryParameters: competition_id,season_id
+
+mt5_stats_ulama_player_passes_away:
+  stat: mt5_stats_ulama_player_passes_away
+  setupQuery: DELETE FROM mt5_stats_ulama_player_passes_away where competition_id=:competition_id and season_id=:season_id
+  cleanupQuery:
+  sourceQuery: SELECT  competition_id,season_id,team_id,player_id,successful_passes,missed_passes,total_passes,accurate_fwd_zone_pass,accurate_back_zone_pass,total_final_third_passes,total_cross,perc_correct_centers FROM mt5_stats_ulama_player_passes_away where competition_id=:competition_id and season_id=:season_id
+  destinationQuery: INSERT INTO mt5_stats_ulama_player_passes_away (competition_id, season_id, team_id, player_id, successful_passes, missed_passes, total_passes, accurate_fwd_zone_pass, accurate_back_zone_pass, total_final_third_passes, total_cross, perc_correct_centers) VALUES(:competition_id,:season_id,:team_id,:player_id,:successful_passes,:missed_passes,:total_passes,:accurate_fwd_zone_pass,:accurate_back_zone_pass,:total_final_third_passes,:total_cross,:perc_correct_centers)
+  queryParameters: competition_id,season_id

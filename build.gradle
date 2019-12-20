@@ -1,0 +1,25 @@
+def boot_starters = ['jdbc', 'amqp', 'test', 'web', 'actuator']
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+
+mainClassName = "gex.mt.optimus.Application"
+
+buildscript {
+  repositories { jcenter() }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.springBootVersion}"
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.11.3'
+    classpath 'org.kordamp.gradle:stats-gradle-plugin:0.1.1'
+  }
+}
+
+dependencies {
+  compile project(':commons')
+  compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
+  compile 'mysql:mysql-connector-java:5.1.6'
+  compile "com.google.code.gson:gson:2.3.1"
+  compile 'net.logstash.logback:logstash-logback-encoder:4.5.1'
+  boot_starters.each { name ->
+    compile("org.springframework.boot:spring-boot-starter-${name}:${project.springBootVersion}")
+  }
+}
